@@ -10,26 +10,31 @@ failures = 10
 guessed_letters = []
 print("¡Bienvenido al juego de adivinanzas!")
 while True:
-    difficulty = int(input("¿Con qué nivel de dificultad deseas jugar? (1)Fácil (2)Media (3)Difícil "))
-    if difficulty in [1, 2, 3]:
-        break
-    print("No has elegido una de las opciones. Reintentalo.")
-print("Estoy pensando en una palabra. ¿Puedes adivinar cuál es?")
+    difficulty = input("¿Con qué nivel de dificultad deseas jugar? (1)Fácil (2)Media (3)Difícil ")
+    if difficulty.isdigit():
+        difficulty = int(difficulty)
+        if 1 <= difficulty <= 3:
+            break
+        print("No has elegido una de las opciones. Reintentalo.")
+    else:
+        print("No has elegido una de las opciones. Reintentalo.")
 # Verifica qué nivel de dificultad fué elegido
-if difficulty == 1:
-    vowels = ["a", "e", "i", "o", "ó", "u"]
-    word = []
-    for letter in secret_word:
-        if letter in vowels:
-            word.append(letter)
-            guessed_letters.append(letter)
-        else:
-            word.append("_") 
-    word_displayed = "".join(word)
-elif difficulty == 2:
-    word_displayed = secret_word[0] + "_" * (len(secret_word) - 2) + secret_word[-1]
-else:
-    word_displayed = "_" * len(secret_word)
+match difficulty:
+    case 1:
+        vowels = ["a", "e", "i", "o", "ó", "u"]
+        word = []
+        for letter in secret_word:
+            if letter in vowels:
+                word.append(letter)
+                guessed_letters.append(letter)
+            else:
+                word.append("_") 
+        word_displayed = "".join(word)
+    case 2:
+        word_displayed = secret_word[0] + "_" * (len(secret_word) - 2) + secret_word[-1]
+    case 3:
+        word_displayed = "_" * len(secret_word)
+print("Estoy pensando en una palabra. ¿Puedes adivinar cuál es?")
 # Mostrarla palabra parcialmente adivinada
 print(f"Palabra: {word_displayed}")
 while failures:
@@ -53,20 +58,21 @@ while failures:
         failures -= 1
     # Mostrar la palabra parcialmente adivinada
     letters = []
-    if difficulty == 2:
-        letters.append(secret_word[0])
-        for letter in secret_word[1:-1]:
-            if letter in guessed_letters:
-                letters.append(letter)
-            else:
-                letters.append("_")
-        letters.append(secret_word[-1])
-    else:
-        for letter in secret_word:
-            if letter in guessed_letters:
-                letters.append(letter)
-            else:
-                letters.append("_")
+    match difficulty:
+        case 2:
+            letters.append(secret_word[0])
+            for letter in secret_word[1:-1]:
+                if letter in guessed_letters:
+                    letters.append(letter)
+                else:
+                    letters.append("_")
+            letters.append(secret_word[-1])
+        case _:
+            for letter in secret_word:
+                if letter in guessed_letters:
+                    letters.append(letter)
+                else:
+                    letters.append("_")
     word_displayed = "".join(letters)
     print(f"Palabra: {word_displayed}")
     # Verificar si se ha adivinado la palabra completa
